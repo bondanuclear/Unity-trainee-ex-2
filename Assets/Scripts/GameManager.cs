@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     
     enum GameState
     {
-        GeneratingGrid, SpawnNumbers, PlayerInput, Moving, Win, Lose
+        GeneratingGrid, SpawnNumbers, PlayerInput, Moving, Lose
     }
     Vector2 moveDir = Vector2.zero;
     Helper helper;
@@ -30,10 +30,18 @@ public class GameManager : MonoBehaviour
         playerInput = _playerInput;
         blocksMover = _blocksMover;
     }
-   
+    private void OnEnable() {
+        blocksMover.OnBlockMerged += ProcessSpawnNumbers;
+        blocksMover.OnLoseStateCheck += ProcessLost;
+    }
+    private void OnDisable() {
+        blocksMover.OnBlockMerged -= ProcessSpawnNumbers;
+        blocksMover.OnLoseStateCheck -= ProcessLost;
+    }
     void Start()
     {
         ChangeState(GameState.GeneratingGrid);
+       
     }
 
     private void ChangeState(GameState newState)
@@ -43,25 +51,21 @@ public class GameManager : MonoBehaviour
         {
             case GameState.GeneratingGrid:
                 ProcessGenerateGrid();
-
                 break;
+
             case GameState.SpawnNumbers:
-                
-                ProcessSpawnNumbers();
-
+                ProcessSpawnNumbers(0);
                 break;
-            case GameState.PlayerInput:
 
-            break;    
+            case GameState.PlayerInput: break; 
+
             case GameState.Moving:
                 ProcessMoveBlocks();
                 break;
+
             case GameState.Lose:
 
-                break;
-            case GameState.Win:
-
-                break;
+            break;
         }
     }
 
@@ -72,7 +76,7 @@ public class GameManager : MonoBehaviour
         ChangeState(GameState.SpawnNumbers);
     }
     
-    private void ProcessSpawnNumbers()
+    private void ProcessSpawnNumbers(int value)
     {
         numberSpawner.SpawnNumbers();
         ChangeState(GameState.PlayerInput);
@@ -80,7 +84,14 @@ public class GameManager : MonoBehaviour
     private void ProcessMoveBlocks()
     {
         blocksMover.MoveBlocks(moveDir);
-        ChangeState(GameState.SpawnNumbers);
+        ChangeState(GameState.PlayerInput);
+    }
+    
+    private void ProcessLost()
+    {
+        this.enabled = false;
+        ChangeState(GameState.Lose);
+        
     }
     private void Update() {
         if(gameState != GameState.PlayerInput) return;
@@ -88,7 +99,7 @@ public class GameManager : MonoBehaviour
      
         //Debug.Log($"Waiting for input! Move input is {moveDir}");
         moveDir = playerInput.GetPlayerInput();
-        Debug.Log($"Input found! You want to move {moveDir}");
+        //Debug.Log($"Input found! You want to move {moveDir}");
         // if player performed input
         if(moveDir != Vector2.zero)
             ChangeState(GameState.Moving);

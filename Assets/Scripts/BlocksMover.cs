@@ -7,42 +7,45 @@ using Zenject;
 
 public class BlocksMover : MonoBehaviour
 {
+    public event Action<int> OnBlockMerged;
+    public event Action OnLoseStateCheck;
+    Vector2[] directions = { Vector2.left, Vector2.up, Vector2.right, Vector2.down};
     Helper helper;
     [Inject]
     private void Construct(Helper _helper)
     {
         helper = _helper;    
+        
     }
     public void MoveBlocks(Vector2 direction)
     {
-        var dictValues = helper.nodesDict.Values;
+        var dictValues = helper.NodesDictValues();
         var filledNodes = dictValues.Where(n => n.NumberNode != null)
                                     .OrderBy(n => n.transform.position.x)
                                     .ThenBy(n => n.transform.position.y)
                                     .ToList();
-        if(direction == Vector2.up || direction == Vector2.right) filledNodes.Reverse();                                   
-        //Debug.Log(filledNodes.Count + " FILLED NODES COUNT");
-        foreach(var block in filledNodes)
+        if (direction == Vector2.up || direction == Vector2.right) filledNodes.Reverse();
+        // Debug.Log(filledNodes.Count + " FILLED NODES COUNT");
+        foreach (var block in filledNodes)
         {
             Node nextBlock;
             Node currBlock = block;
             Vector2 newBlockPos = (Vector2)block.transform.position + direction;
-            do{
-                
-                if(helper.nodesDict.TryGetValue(newBlockPos, out nextBlock))
+            do
+            {
+
+                if (helper.GetDictionary().TryGetValue(newBlockPos, out nextBlock))
                 {
-                    if(nextBlock.NumberNode != null)
+                    if (nextBlock.NumberNode != null)
                     {
                         if (nextBlock.NumberNode.Value == currBlock.NumberNode.Value)
                         {
                             Debug.Log("merging logic ");
-                            
-                            Destroy(currBlock.NumberNode.gameObject);
-                            helper.nodesDict[currBlock.transform.position].NumberNode = null;
-                            helper.nodesDict[nextBlock.transform.position]
-                                            .NumberNode
-                                            .InitNumberNode(helper.GetNumberByValue(nextBlock.NumberNode.Value * 2));
 
+                            Destroy(currBlock.NumberNode.gameObject);
+                            helper.SetNumberNode(currBlock.transform.position, null);
+                            helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
+                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value * 2);
                             break;
                         }
                         else if (nextBlock.NumberNode.Value != currBlock.NumberNode.Value)
@@ -51,26 +54,62 @@ public class BlocksMover : MonoBehaviour
                             break;
                         }
                     }
-                    
                     currBlock.NumberNode.transform.position = nextBlock.transform.position;
-                    helper.nodesDict[nextBlock.transform.position].NumberNode = currBlock.NumberNode;
-                    helper.nodesDict[(Vector2)nextBlock.transform.position - direction].NumberNode = null; 
+                    helper.SetNumberNode(nextBlock.transform.position, currBlock.NumberNode);
+                    helper.SetNumberNode((Vector2)nextBlock.transform.position - direction, null);
                     currBlock = nextBlock;
-                    //Debug.Log($"current block {currBlock.transform.position} ");
                     newBlockPos += direction;
-                    //Debug.Log("new block pos " + newBlockPos);
-                }    
+                }
 
             }
-            while(nextBlock != null);
-        }                            
-        
-        foreach (var item in helper.nodesDict)
+            while (nextBlock != null);
+        }
+
+        CheckLoseState(filledNodes);
+
+        //helper.PrintKeysValues();
+    }
+
+    private void CheckLoseState(List<Node> filledNodes)
+    {
+        var freeBlocks = helper.NodesDictValues().Where(b => b.NumberNode == null).ToList();
+        if (freeBlocks.Count == 1 || freeBlocks.Count == 0)
         {
-            Debug.Log($"{item.Key} Value: {item.Value.NumberNode}");
+            Debug.LogWarning(" careful, low space ");
+            if (WillLoseState(filledNodes))
+            {
+                Debug.LogWarning("YOU LOST");
+                OnLoseStateCheck?.Invoke();
+
+            }
         }
     }
 
+    private bool WillLoseState(List<Node> filledBlocks)
+    {
+      
+        Debug.Log(filledBlocks.Count + " FILLED SPOTS COUNT. YOU HAVE REACHED 1 or 0 BLANK SPACES");
+        foreach (var filledSpot in filledBlocks)
+        {
+            for (int i = 0; i < directions.Length; i++)
+            {
+                Vector2 checkPos = (Vector2)filledSpot.transform.position + directions[i];
+
+                if (!helper.HasKey(checkPos))
+                {
+                    Debug.LogWarning($"Nope, {checkPos} will not do it");
+                    continue;
+                }
+                if (filledSpot.NumberNode.Value == helper.GetNode(checkPos).NumberNode.Value)
+                {
+                    Debug.LogError($"oooh yeah, {filledSpot.transform.position} and {checkPos} are the same");
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
     public void MoveOneBlock() /// test function
     {
         // Vector2 newBlockPos = (Vector2)block.transform.position + direction;
@@ -104,47 +143,5 @@ public class BlocksMover : MonoBehaviour
 
         //     block.NumberNode = null;
     }
-    public void Test() /// test function
-    {
-        // Node nextBlock;
-        // Node backUpNode = block;
-        // Vector2 newBlockPos = (Vector2)block.transform.position + direction;
-        // do
-        // {
-        //     helper.nodesDict.TryGetValue(newBlockPos, out nextBlock);
-        //     if (nextBlock != null)
-        //     {
-
-        //         if (nextBlock.NumberNode != null)
-        //         {
-
-        //             if (backUpNode.NumberNode.Value == nextBlock.NumberNode.Value)
-        //             {
-        //                 //use object pool instead
-        //                 // Destroy(block.NumberNode.gameObject);
-        //                 // block.NumberNode = null;
-        //                 // helper.nodesDict[nextBlock.transform.position]
-        //                 //         .NumberNode
-        //                 //         .InitNumberNode(helper.GetNumberByValue(nextBlock.NumberNode.Value * 2));
-        //                 continue;
-
-        //             }
-        //             else if (backUpNode.NumberNode.Value != nextBlock.NumberNode.Value)
-        //             {
-        //                 Debug.Log("YOU SHALL NOT PASS !");
-        //                 continue;
-        //             }
-        //         }
-        //         Debug.Log("i was here");
-        //         backUpNode.NumberNode.transform.position = nextBlock.transform.position;
-
-        //         helper.nodesDict[nextBlock.transform.position].NumberNode = backUpNode.NumberNode;
-
-        //         helper.nodesDict[(Vector2)nextBlock.transform.position - direction].NumberNode = null;
-        //         backUpNode = nextBlock;
-        //         newBlockPos += direction;
-        //         Debug.Log("new block pos " + newBlockPos);
-        //     }
-        // } while (nextBlock != null);
-    }
+    
 }

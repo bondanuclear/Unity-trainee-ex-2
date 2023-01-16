@@ -17,8 +17,14 @@ public class LevelInstaller : MonoInstaller
         BindNumberSpawner();
         BindPlayerInput();
         BindBlocksMover();
-        
+        //BindTestSignal();
     }
+
+    // private void BindTestSignal()
+    // {
+    //     Container.DeclareSignal<BlocksMergedSignal>();
+    //     Container.BindSignal<BlocksMergedSignal>().ToMethod<NumberSpawner>(x => x.SayHello).FromResolve();
+    // }
 
     private void BindBlocksMover()
     {
