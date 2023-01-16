@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
     
     private void ProcessSpawnNumbers()
     {
-        //numberSpawner.SpawnNumbers();
+        numberSpawner.SpawnNumbers();
         ChangeState(GameState.PlayerInput);
     }
     private void ProcessMoveBlocks()

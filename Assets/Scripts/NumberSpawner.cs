@@ -16,7 +16,7 @@ public class NumberSpawner : MonoBehaviour
     } 
     public void SpawnNumbers()
     {
-        int amountOfSpawnedNumbers = Random.Range(2,3);
+        int amountOfSpawnedNumbers = Random.Range(2,4);
         var dictKeys = helper.nodesDict.Values;
         var freeSpots = dictKeys.Where(s => s.NumberNode == null)
                                 .OrderBy(s => rnd.Next())
@@ -29,17 +29,17 @@ public class NumberSpawner : MonoBehaviour
             num.InitNumberNode(helper.GetNumberByValue(2));
             spot.NumberNode = num;
         }
-        foreach (var item in helper.nodesDict)
-        {
-            Debug.Log($"{item.Key} Value: {item.Value.NumberNode}");
-        }
+        // foreach (var item in helper.nodesDict)
+        // {
+        //     Debug.Log($"{item.Key} Value: {item.Value.NumberNode}");
+        // }
     }
     
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.B))
-        {
-            SpawnNumbers();
-        }
-    }
+    // private void Update() {
+    //     if(Input.GetKeyDown(KeyCode.B))
+    //     {
+    //         SpawnNumbers();
+    //     }
+    // }
 }
 

@@ -21,7 +21,7 @@ public class BlocksMover : MonoBehaviour
                                     .ThenBy(n => n.transform.position.y)
                                     .ToList();
         if(direction == Vector2.up || direction == Vector2.right) filledNodes.Reverse();                                   
-        Debug.Log(filledNodes.Count + " FILLED NODES COUNT");
+        //Debug.Log(filledNodes.Count + " FILLED NODES COUNT");
         foreach(var block in filledNodes)
         {
             Node nextBlock;
@@ -37,11 +37,18 @@ public class BlocksMover : MonoBehaviour
                         {
                             Debug.Log("merging logic ");
                             
+                            Destroy(currBlock.NumberNode.gameObject);
+                            helper.nodesDict[currBlock.transform.position].NumberNode = null;
+                            helper.nodesDict[nextBlock.transform.position]
+                                            .NumberNode
+                                            .InitNumberNode(helper.GetNumberByValue(nextBlock.NumberNode.Value * 2));
+
+                            break;
                         }
                         else if (nextBlock.NumberNode.Value != currBlock.NumberNode.Value)
                         {
                             Debug.Log("Can't move forward");
-                            
+                            break;
                         }
                     }
                     
@@ -49,9 +56,9 @@ public class BlocksMover : MonoBehaviour
                     helper.nodesDict[nextBlock.transform.position].NumberNode = currBlock.NumberNode;
                     helper.nodesDict[(Vector2)nextBlock.transform.position - direction].NumberNode = null; 
                     currBlock = nextBlock;
-                    Debug.Log($"current block {currBlock.transform.position} ");
+                    //Debug.Log($"current block {currBlock.transform.position} ");
                     newBlockPos += direction;
-                    Debug.Log("new block pos " + newBlockPos);
+                    //Debug.Log("new block pos " + newBlockPos);
                 }    
 
             }

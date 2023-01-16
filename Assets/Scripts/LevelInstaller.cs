@@ -17,6 +17,7 @@ public class LevelInstaller : MonoInstaller
         BindNumberSpawner();
         BindPlayerInput();
         BindBlocksMover();
+        
     }
 
     private void BindBlocksMover()
