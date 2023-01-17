@@ -7,15 +7,17 @@ using Zenject;
 
 public class BlocksMover : MonoBehaviour
 {
+   
     public event Action<int> OnBlockMerged;
     public event Action OnLoseStateCheck;
     Vector2[] directions = { Vector2.left, Vector2.up, Vector2.right, Vector2.down};
+    NumbersPool numbersPool;
     Helper helper;
     [Inject]
-    private void Construct(Helper _helper)
+    private void Construct(Helper _helper, NumbersPool _numbersPool)
     {
-        helper = _helper;    
-        
+        helper = _helper;
+        numbersPool = _numbersPool;
     }
     public void MoveBlocks(Vector2 direction)
     {
@@ -42,10 +44,12 @@ public class BlocksMover : MonoBehaviour
                         {
                             Debug.Log("merging logic ");
 
-                            Destroy(currBlock.NumberNode.gameObject);
+                            //Destroy(currBlock.NumberNode.gameObject);
+                            currBlock.NumberNode.Release();
+                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value);
                             helper.SetNumberNode(currBlock.transform.position, null);
                             helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
-                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value * 2);
+                            
                             break;
                         }
                         else if (nextBlock.NumberNode.Value != currBlock.NumberNode.Value)
@@ -64,7 +68,10 @@ public class BlocksMover : MonoBehaviour
             }
             while (nextBlock != null);
         }
-
+        // var filledChecker = dictValues.Where(n => n.NumberNode != null)
+        //                             .OrderBy(n => n.transform.position.x)
+        //                             .ThenBy(n => n.transform.position.y)
+        //                             .ToList();
         CheckLoseState(filledNodes);
 
         //helper.PrintKeysValues();
@@ -78,17 +85,13 @@ public class BlocksMover : MonoBehaviour
             Debug.LogWarning(" careful, low space ");
             if (WillLoseState(filledNodes))
             {
-                Debug.LogWarning("YOU LOST");
                 OnLoseStateCheck?.Invoke();
-
             }
         }
     }
 
     private bool WillLoseState(List<Node> filledBlocks)
-    {
-      
-        Debug.Log(filledBlocks.Count + " FILLED SPOTS COUNT. YOU HAVE REACHED 1 or 0 BLANK SPACES");
+    { 
         foreach (var filledSpot in filledBlocks)
         {
             for (int i = 0; i < directions.Length; i++)
@@ -97,15 +100,22 @@ public class BlocksMover : MonoBehaviour
 
                 if (!helper.HasKey(checkPos))
                 {
-                    Debug.LogWarning($"Nope, {checkPos} will not do it");
                     continue;
                 }
+                Debug.Log($"i am checking {checkPos}");
+                if(helper.GetNode(checkPos).NumberNode == null) 
+                {
+                    continue;
+                } else
+                {
+                    Debug.Log($"GONNA COMPARE {filledSpot.NumberNode.Value}");
+                    Debug.Log($"WITH {helper.GetNode(checkPos).NumberNode.Value}");
+                }
+                
                 if (filledSpot.NumberNode.Value == helper.GetNode(checkPos).NumberNode.Value)
                 {
-                    Debug.LogError($"oooh yeah, {filledSpot.transform.position} and {checkPos} are the same");
                     return false;
                 }
-
             }
         }
         return true;

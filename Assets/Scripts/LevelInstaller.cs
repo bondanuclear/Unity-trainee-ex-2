@@ -10,6 +10,7 @@ public class LevelInstaller : MonoInstaller
     [SerializeField] NumberSpawner numberSpawner;
     [SerializeField] PlayerInput playerInput;
     [SerializeField] BlocksMover blocksMover;
+    [SerializeField] NumbersPool numbersPool;
     public override void InstallBindings()
     {
         BindHelper();
@@ -17,7 +18,15 @@ public class LevelInstaller : MonoInstaller
         BindNumberSpawner();
         BindPlayerInput();
         BindBlocksMover();
-        //BindTestSignal();
+        BindNumbersPool();
+    }
+
+    private void BindNumbersPool()
+    {
+        Container.Bind<NumbersPool>()
+                .FromInstance(numbersPool)
+                .AsSingle()
+                .NonLazy();
     }
 
     // private void BindTestSignal()

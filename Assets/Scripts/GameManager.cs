@@ -10,10 +10,10 @@ public class GameManager : MonoBehaviour
     
     enum GameState
     {
-        GeneratingGrid, SpawnNumbers, PlayerInput, Moving, Lose
+        GeneratingGrid, SpawnNumbers, PlayerInput, Moving, Lose, Win
     }
     Vector2 moveDir = Vector2.zero;
-    Helper helper;
+   
     GridGenerator gridGenerator;
     NumberSpawner numberSpawner;
     PlayerInput playerInput;
@@ -21,10 +21,9 @@ public class GameManager : MonoBehaviour
     GameState gameState;
 
     [Inject]
-    private void Construct(Helper _helper, GridGenerator _gridGenerator,
+    private void Construct(GridGenerator _gridGenerator,
      NumberSpawner _numberSpawner, PlayerInput _playerInput, BlocksMover _blocksMover)
-    {
-        helper = _helper;    
+    {   
         gridGenerator = _gridGenerator;
         numberSpawner = _numberSpawner;
         playerInput = _playerInput;
@@ -32,11 +31,12 @@ public class GameManager : MonoBehaviour
     }
     private void OnEnable() {
         blocksMover.OnBlockMerged += ProcessSpawnNumbers;
-        blocksMover.OnLoseStateCheck += ProcessLost;
+        blocksMover.OnLoseStateCheck += ProcessLost;   
     }
     private void OnDisable() {
         blocksMover.OnBlockMerged -= ProcessSpawnNumbers;
         blocksMover.OnLoseStateCheck -= ProcessLost;
+       
     }
     void Start()
     {
@@ -62,10 +62,12 @@ public class GameManager : MonoBehaviour
             case GameState.Moving:
                 ProcessMoveBlocks();
                 break;
-
             case GameState.Lose:
-
-            break;
+                this.enabled = false;
+                break;
+            case GameState.Win:
+                this.enabled = false;
+                break;    
         }
     }
 
@@ -78,6 +80,11 @@ public class GameManager : MonoBehaviour
     
     private void ProcessSpawnNumbers(int value)
     {
+        if(value == 2048)
+        {
+            ChangeState(GameState.Win);
+            return;
+        }
         numberSpawner.SpawnNumbers();
         ChangeState(GameState.PlayerInput);
     }
@@ -89,14 +96,15 @@ public class GameManager : MonoBehaviour
     
     private void ProcessLost()
     {
-        this.enabled = false;
-        ChangeState(GameState.Lose);
-        
+        ChangeState(GameState.Lose); 
     }
+    // private void ProcessWinState(int value)
+    // {
+    //     ChangeState(GameState.Win);
+    //     this.enabled = false;
+    // }
     private void Update() {
         if(gameState != GameState.PlayerInput) return;
-        //Debug.Log("updating");
-     
         //Debug.Log($"Waiting for input! Move input is {moveDir}");
         moveDir = playerInput.GetPlayerInput();
         //Debug.Log($"Input found! You want to move {moveDir}");

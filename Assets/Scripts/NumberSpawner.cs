@@ -8,14 +8,15 @@ using Zenject;
 public class NumberSpawner : MonoBehaviour
 {
     static System.Random rnd = new System.Random();
-    
-    Vector2[] directions = {Vector2.left, Vector2.up, Vector2.right, Vector2.down};
+    [SerializeField] int numberToSpawn = 2;
     [SerializeField] NumberNode numberNode;
     Helper helper;
+    NumbersPool numbersPool;
     [Inject]
-    private void Construct(Helper _helper)
+    private void Construct(Helper _helper, NumbersPool _numbersPool)
     {
         helper = _helper;
+        numbersPool = _numbersPool;
     } 
     public void SpawnNumbers()
     {
@@ -28,50 +29,19 @@ public class NumberSpawner : MonoBehaviour
                                
         foreach (var spot in freeSpots)
         {
-
-            var num = Instantiate(numberNode, spot.transform.position, Quaternion.identity);
-            num.InitNumberNode(helper.GetNumberByValue(2));
-            helper.SetNumberNode(spot.transform.position, num);
+            Debug.Log($"Pool is here {numbersPool.transform.position}");
+            NumberNode pooledObject = numbersPool.GetFromPool();
+            pooledObject.transform.position = spot.transform.position;
+            
+            //var pooledObject = Instantiate(numberNode, spot.transform.position, Quaternion.identity);
+            pooledObject.InitNumberNode(helper.GetNumberByValue(numberToSpawn));
+            helper.SetNumberNode(spot.transform.position, pooledObject);
             //spot.NumberNode = num;
         }
-        // if(freeSpots.Count == 1 || freeSpots.Count == 0)
-        // {
-        //     Debug.LogWarning(" careful, low space ");
-        //     if(WillLoseState(dictValues))
-        //     {
-        //         Debug.LogWarning("YOU LOST");
-        //         //OnLoseStateCheck?.Invoke();
-        //     }
-        // }
-        //var filledSpots = dictValues.Where(s => s.NumberNode != null).ToList();
-        //helper.PrintKeysValues();
+        
     }
 
-    // private bool WillLoseState(List<Node> dictValues)
-    // {
-    //     var filledSpots = dictValues.Where(s => s.NumberNode != null).ToList();
-    //     Debug.Log(filledSpots.Count + " FILLED SPOTS COUNT. YOU HAVE REACHED 1 or 0 BLANK SPACES");
-    //     foreach (var filledSpot in filledSpots)
-    //     {
-    //         for (int i = 0; i < directions.Length; i++)
-    //         {
-    //             Vector2 checkPos = (Vector2)filledSpot.transform.position + directions[i];
-                
-    //             if(!helper.HasKey(checkPos))
-    //             {
-    //                 Debug.LogWarning($"Nope, {checkPos} will not do it");
-    //                 continue;
-    //             } 
-    //             if (filledSpot.NumberNode.Value == helper.GetNode(checkPos).NumberNode.Value)
-    //             {
-    //                 Debug.LogError($"oooh yeah, {filledSpot.transform.position} and {checkPos} are the same");
-    //                 return false;
-    //             }
-                 
-    //         }
-    //     }
-    //     return true;
-    // }
+   
 
     // private void Update() {
     //     if(Input.GetKeyDown(KeyCode.B))

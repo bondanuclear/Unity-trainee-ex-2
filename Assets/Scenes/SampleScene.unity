@@ -123,6 +123,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &36449986
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 36449988}
+  - component: {fileID: 36449987}
+  m_Layer: 0
+  m_Name: Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &36449987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36449986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb5b1e55a2fdc164abe1accc1691fbe9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolSize: 15
+  number: {fileID: 2942322501300871628, guid: 7d2cb3698afbca04fa004679f2a93835, type: 3}
+--- !u!4 &36449988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36449986}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &329381436
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,6 +339,7 @@ MonoBehaviour:
   numberSpawner: {fileID: 1061697978}
   playerInput: {fileID: 1061697979}
   blocksMover: {fileID: 1061697980}
+  numbersPool: {fileID: 36449987}
 --- !u!114 &420847978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -903,6 +950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2fb00bf433ca541adf0a87001580e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberToSpawn: 2
   numberNode: {fileID: 2942322501300871628, guid: 7d2cb3698afbca04fa004679f2a93835, type: 3}
 --- !u!114 &1061697979
 MonoBehaviour:
@@ -1386,6 +1434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39f02d29dd57c749b8c8da70e892e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  retryButton: {fileID: 2042665699}
   winPanel: {fileID: 1723735817}
 --- !u!114 &1838662389
 MonoBehaviour:
@@ -1400,6 +1449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   losePanel: {fileID: 762109123}
+  retryButton: {fileID: 2042665699}
 --- !u!1 &2042665699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1412,13 +1462,14 @@ GameObject:
   - component: {fileID: 2042665703}
   - component: {fileID: 2042665702}
   - component: {fileID: 2042665701}
+  - component: {fileID: 2042665704}
   m_Layer: 5
   m_Name: RetryButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2042665700
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1437,7 +1488,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -282, y: -141}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2042665701
@@ -1483,7 +1534,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2042665702}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2042665704}
+        m_TargetAssemblyTypeName: ReloadLevel, Assembly-CSharp
+        m_MethodName: Retry
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2042665702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1522,3 +1585,15 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2042665699}
   m_CullTransparentMesh: 1
+--- !u!114 &2042665704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042665699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512562d476e16484dbcd749b649409a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

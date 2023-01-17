@@ -7,6 +7,7 @@ using Zenject;
 public class WinState : MonoBehaviour
 {
     private const int WIN_NUMBER = 2048;
+    [SerializeField] GameObject retryButton;
     [SerializeField] GameObject winPanel;
     BlocksMover blocksMover;
     [Inject]
@@ -25,9 +26,11 @@ public class WinState : MonoBehaviour
     }
     public void CheckWinState(int value)
     {
+        Debug.Log($"VALUE BLOCK MOVER PASS IS {value}");
         if(value == WIN_NUMBER)
         {
             winPanel.SetActive(!winPanel.activeSelf);
+            retryButton.SetActive(true);
             Debug.Log(" You WON! ");
         } 
         else
@@ -35,6 +38,6 @@ public class WinState : MonoBehaviour
             Debug.Log(" keep moving on! ");
         }
     }
-
+    
     
 }

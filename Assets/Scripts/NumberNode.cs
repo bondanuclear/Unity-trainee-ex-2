@@ -9,11 +9,17 @@ public class NumberNode : MonoBehaviour
     public int Value {get; set;}
     [SerializeField] TextMeshPro NumberText;
     [SerializeField] SpriteRenderer numberRenderer;
+    public NumbersPool numbersPool;
     public void InitNumberNode(in Numbers number)
     {
         //Debug.Log($"{number.numberColor} {number.value}");
         Value = number.value;
         NumberText.text = number.value.ToString();
         numberRenderer.color = number.numberColor;
+    }
+
+    public void Release()
+    {
+        numbersPool.ReturnToPool(this);
     }
 }

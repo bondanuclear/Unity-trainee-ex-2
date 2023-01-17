@@ -7,6 +7,7 @@ using Zenject;
 public class LoseState : MonoBehaviour
 {
     [SerializeField] GameObject losePanel;
+    [SerializeField] GameObject retryButton;
     BlocksMover blocksMover;
     [Inject]
     private void Construct(BlocksMover _blocksMover)
@@ -23,7 +24,7 @@ public class LoseState : MonoBehaviour
     private void ShowLosePanel()
     {
         losePanel.SetActive(!losePanel.activeSelf);
-        
+        retryButton.SetActive(true);
     }
 
     
