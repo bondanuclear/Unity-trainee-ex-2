@@ -10,6 +10,7 @@ public class BlocksMover : MonoBehaviour
    
     public event Action<int> OnBlockMerged;
     public event Action OnLoseStateCheck;
+    public event Action OnHasMergedTrue;
     Vector2[] directions = { Vector2.left, Vector2.up, Vector2.right, Vector2.down};
     NumbersPool numbersPool;
     Helper helper;
@@ -21,6 +22,7 @@ public class BlocksMover : MonoBehaviour
     }
     public void MoveBlocks(Vector2 direction)
     {
+        bool hasMerged = false;
         var dictValues = helper.NodesDictValues();
         var filledNodes = dictValues.Where(n => n.NumberNode != null)
                                     .OrderBy(n => n.transform.position.x)
@@ -46,7 +48,9 @@ public class BlocksMover : MonoBehaviour
 
                             //Destroy(currBlock.NumberNode.gameObject);
                             currBlock.NumberNode.Release();
-                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value);
+                            hasMerged = true;
+                            // check if we win and increase score
+                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value); 
                             helper.SetNumberNode(currBlock.transform.position, null);
                             helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
                             
@@ -68,11 +72,18 @@ public class BlocksMover : MonoBehaviour
             }
             while (nextBlock != null);
         }
-        // var filledChecker = dictValues.Where(n => n.NumberNode != null)
-        //                             .OrderBy(n => n.transform.position.x)
-        //                             .ThenBy(n => n.transform.position.y)
-        //                             .ToList();
-        CheckLoseState(filledNodes);
+
+        if(hasMerged)
+        {
+            //Debug.Log(" yep, should spawn ");
+            OnHasMergedTrue?.Invoke();
+        }
+        
+        var filledChecker = dictValues.Where(n => n.NumberNode != null)
+                                    .OrderBy(n => n.transform.position.x)
+                                    .ThenBy(n => n.transform.position.y)
+                                    .ToList();
+        CheckLoseState(filledChecker);
 
         //helper.PrintKeysValues();
     }
@@ -80,7 +91,7 @@ public class BlocksMover : MonoBehaviour
     private void CheckLoseState(List<Node> filledNodes)
     {
         var freeBlocks = helper.NodesDictValues().Where(b => b.NumberNode == null).ToList();
-        if (freeBlocks.Count == 1 || freeBlocks.Count == 0)
+        if (freeBlocks.Count == 0)
         {
             Debug.LogWarning(" careful, low space ");
             if (WillLoseState(filledNodes))

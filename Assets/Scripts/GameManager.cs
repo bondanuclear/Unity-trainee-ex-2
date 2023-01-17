@@ -30,11 +30,13 @@ public class GameManager : MonoBehaviour
         blocksMover = _blocksMover;
     }
     private void OnEnable() {
-        blocksMover.OnBlockMerged += ProcessSpawnNumbers;
-        blocksMover.OnLoseStateCheck += ProcessLost;   
+        blocksMover.OnBlockMerged += ProcessWinState;
+        blocksMover.OnLoseStateCheck += ProcessLost;
+        blocksMover.OnHasMergedTrue += ProcessSpawnNumbers;   
     }
     private void OnDisable() {
-        blocksMover.OnBlockMerged -= ProcessSpawnNumbers;
+        blocksMover.OnBlockMerged -= ProcessWinState;
+        blocksMover.OnHasMergedTrue -= ProcessSpawnNumbers;
         blocksMover.OnLoseStateCheck -= ProcessLost;
        
     }
@@ -54,7 +56,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.SpawnNumbers:
-                ProcessSpawnNumbers(0);
+                ProcessSpawnNumbers();
                 break;
 
             case GameState.PlayerInput: break; 
@@ -78,13 +80,9 @@ public class GameManager : MonoBehaviour
         ChangeState(GameState.SpawnNumbers);
     }
     
-    private void ProcessSpawnNumbers(int value)
+    private void ProcessSpawnNumbers()
     {
-        if(value == 2048)
-        {
-            ChangeState(GameState.Win);
-            return;
-        }
+       
         numberSpawner.SpawnNumbers();
         ChangeState(GameState.PlayerInput);
     }
@@ -98,12 +96,14 @@ public class GameManager : MonoBehaviour
     {
         ChangeState(GameState.Lose); 
     }
-    // private void ProcessWinState(int value)
-    // {
-    //     ChangeState(GameState.Win);
-    //     this.enabled = false;
-    // }
+    private void ProcessWinState(int value)
+    {
+        if(value == 2048)
+            ChangeState(GameState.Win);
+       
+    }
     private void Update() {
+        
         if(gameState != GameState.PlayerInput) return;
         //Debug.Log($"Waiting for input! Move input is {moveDir}");
         moveDir = playerInput.GetPlayerInput();

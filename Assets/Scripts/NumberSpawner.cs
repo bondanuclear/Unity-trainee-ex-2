@@ -20,6 +20,7 @@ public class NumberSpawner : MonoBehaviour
     } 
     public void SpawnNumbers()
     {
+        Debug.Log("spawning...");
         int amountOfSpawnedNumbers = UnityEngine.Random.Range(2,4);
         var dictValues = helper.NodesDictValues();
         var freeSpots = dictValues.Where(s => s.NumberNode == null)
