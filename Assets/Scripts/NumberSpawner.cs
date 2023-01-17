@@ -20,7 +20,6 @@ public class NumberSpawner : MonoBehaviour
     } 
     public void SpawnNumbers()
     {
-        Debug.Log("spawning...");
         int amountOfSpawnedNumbers = UnityEngine.Random.Range(2,4);
         var dictValues = helper.NodesDictValues();
         var freeSpots = dictValues.Where(s => s.NumberNode == null)
@@ -30,14 +29,11 @@ public class NumberSpawner : MonoBehaviour
                                
         foreach (var spot in freeSpots)
         {
-            Debug.Log($"Pool is here {numbersPool.transform.position}");
+           
             NumberNode pooledObject = numbersPool.GetFromPool();
             pooledObject.transform.position = spot.transform.position;
-            
-            //var pooledObject = Instantiate(numberNode, spot.transform.position, Quaternion.identity);
             pooledObject.InitNumberNode(helper.GetNumberByValue(numberToSpawn));
             helper.SetNumberNode(spot.transform.position, pooledObject);
-            //spot.NumberNode = num;
         }
         
     }

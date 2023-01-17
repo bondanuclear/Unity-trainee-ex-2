@@ -24,10 +24,7 @@ public class BlocksMover : MonoBehaviour
     {
         bool hasMerged = false;
         var dictValues = helper.NodesDictValues();
-        var filledNodes = dictValues.Where(n => n.NumberNode != null)
-                                    .OrderBy(n => n.transform.position.x)
-                                    .ThenBy(n => n.transform.position.y)
-                                    .ToList();
+        List<Node> filledNodes = GetFilledNodes(dictValues);
         if (direction == Vector2.up || direction == Vector2.right) filledNodes.Reverse();
         // Debug.Log(filledNodes.Count + " FILLED NODES COUNT");
         foreach (var block in filledNodes)
@@ -45,15 +42,13 @@ public class BlocksMover : MonoBehaviour
                         if (nextBlock.NumberNode.Value == currBlock.NumberNode.Value)
                         {
                             Debug.Log("merging logic ");
-
-                            //Destroy(currBlock.NumberNode.gameObject);
                             currBlock.NumberNode.Release();
                             hasMerged = true;
                             // check if we win and increase score
-                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value * 2); 
+                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value * 2);
                             helper.SetNumberNode(currBlock.transform.position, null);
                             helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
-                            
+
                             break;
                         }
                         else if (nextBlock.NumberNode.Value != currBlock.NumberNode.Value)
@@ -73,19 +68,22 @@ public class BlocksMover : MonoBehaviour
             while (nextBlock != null);
         }
 
-        if(hasMerged)
+        if (hasMerged)
         {
-            //Debug.Log(" yep, should spawn ");
             OnHasMergedTrue?.Invoke();
         }
-        
-        var filledChecker = dictValues.Where(n => n.NumberNode != null)
+
+        var filledChecker = GetFilledNodes(dictValues);
+        CheckLoseState(filledChecker);
+
+    }
+
+    private static List<Node> GetFilledNodes(List<Node> dictValues)
+    {
+        return dictValues.Where(n => n.NumberNode != null)
                                     .OrderBy(n => n.transform.position.x)
                                     .ThenBy(n => n.transform.position.y)
                                     .ToList();
-        CheckLoseState(filledChecker);
-
-        //helper.PrintKeysValues();
     }
 
     private void CheckLoseState(List<Node> filledNodes)
@@ -93,7 +91,6 @@ public class BlocksMover : MonoBehaviour
         var freeBlocks = helper.NodesDictValues().Where(b => b.NumberNode == null).ToList();
         if (freeBlocks.Count == 0)
         {
-            Debug.LogWarning(" careful, low space ");
             if (WillLoseState(filledNodes))
             {
                 OnLoseStateCheck?.Invoke();
@@ -113,16 +110,10 @@ public class BlocksMover : MonoBehaviour
                 {
                     continue;
                 }
-                Debug.Log($"i am checking {checkPos}");
                 if(helper.GetNode(checkPos).NumberNode == null) 
                 {
                     continue;
-                } else
-                {
-                    Debug.Log($"GONNA COMPARE {filledSpot.NumberNode.Value}");
-                    Debug.Log($"WITH {helper.GetNode(checkPos).NumberNode.Value}");
-                }
-                
+                } 
                 if (filledSpot.NumberNode.Value == helper.GetNode(checkPos).NumberNode.Value)
                 {
                     return false;

@@ -26,17 +26,14 @@ public class WinState : MonoBehaviour
     }
     public void CheckWinState(int value)
     {
-        Debug.Log($"VALUE BLOCK MOVER PASS IS {value}");
+        // Debug.Log($"VALUE BLOCK MOVER PASS IS {value}");
         if(value == WIN_NUMBER)
         {
             winPanel.SetActive(!winPanel.activeSelf);
             retryButton.SetActive(true);
             Debug.Log(" You WON! ");
         } 
-        else
-        {
-            Debug.Log(" keep moving on! ");
-        }
+       
     }
     
     
