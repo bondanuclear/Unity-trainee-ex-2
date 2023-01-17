@@ -50,7 +50,7 @@ public class BlocksMover : MonoBehaviour
                             currBlock.NumberNode.Release();
                             hasMerged = true;
                             // check if we win and increase score
-                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value); 
+                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value * 2); 
                             helper.SetNumberNode(currBlock.transform.position, null);
                             helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
                             

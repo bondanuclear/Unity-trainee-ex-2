@@ -950,7 +950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2fb00bf433ca541adf0a87001580e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberToSpawn: 2
+  numberToSpawn: 1024
   numberNode: {fileID: 2942322501300871628, guid: 7d2cb3698afbca04fa004679f2a93835, type: 3}
 --- !u!114 &1061697979
 MonoBehaviour:
