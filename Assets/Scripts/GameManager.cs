@@ -30,8 +30,11 @@ public class GameManager : MonoBehaviour
         blocksMover = _blocksMover;
     }
     private void OnEnable() {
+        // check if we win
         blocksMover.OnBlockMerged += ProcessWinState;
+        // check if we lose
         blocksMover.OnLoseStateCheck += ProcessLost;
+        // spawn numbers if blocks merged
         blocksMover.OnHasMergedTrue += ProcessSpawnNumbers;   
     }
     private void OnDisable() {
@@ -106,7 +109,13 @@ public class GameManager : MonoBehaviour
         
         if(gameState != GameState.PlayerInput) return;
         //Debug.Log($"Waiting for input! Move input is {moveDir}");
-        moveDir = playerInput.GetPlayerInput();
+        //moveDir = playerInput.GetPlayerInput();
+
+        //
+        //Debug.Log("Blocks should move in direction " + playerInput.GetMobileInput());
+
+        //Debug.Log("move dir " + playerInput.BlocksDirection(playerInput.GetMobileInput()));
+        moveDir = playerInput.BlocksDirection(playerInput.GetMobileInput());
         //Debug.Log($"Input found! You want to move {moveDir}");
         // if player performed input
         if(moveDir != Vector2.zero)
