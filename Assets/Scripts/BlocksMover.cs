@@ -43,6 +43,7 @@ public class BlocksMover : MonoBehaviour
                         if (nextBlock.NumberNode.Value == currBlock.NumberNode.Value)
                         {
                             Debug.Log("merging logic ");
+                           
                             currBlock.NumberNode.Release();
                             hasMerged = true;
                             // check if we win and increase score
@@ -58,7 +59,7 @@ public class BlocksMover : MonoBehaviour
                             break;
                         }
                     }
-                    //currBlock.NumberNode.transform.DOMove(nextBlock.transform.position, 0.2f);
+                    //currBlock.NumberNode.transform.DOMove(nextBlock.transform.position, 0.1f);
                     currBlock.NumberNode.transform.position = nextBlock.transform.position;
                     helper.SetNumberNode(nextBlock.transform.position, currBlock.NumberNode);
                     helper.SetNumberNode((Vector2)nextBlock.transform.position - direction, null);
