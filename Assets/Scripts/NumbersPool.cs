@@ -42,6 +42,7 @@ public class NumbersPool : MonoBehaviour
         }
         NumberNode pooledObject = numberStack.Pop();
         pooledObject.gameObject.SetActive(true);
+        pooledObject.GetComponent<ParticleSystem>().Play();
         return pooledObject;
 
     }

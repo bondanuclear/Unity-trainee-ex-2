@@ -24,12 +24,14 @@ public class BlocksMover : MonoBehaviour
     public void MoveBlocks(Vector2 direction)
     {
         bool hasMerged = false;
+        
         var dictValues = helper.NodesDictValues();
         List<Node> filledNodes = GetFilledNodes(dictValues);
         if (direction == Vector2.up || direction == Vector2.right) filledNodes.Reverse();
         // Debug.Log(filledNodes.Count + " FILLED NODES COUNT");
         foreach (var block in filledNodes)
         {
+            Vector2 movePos = block.NumberNode.transform.position;
             Node nextBlock;
             Node currBlock = block;
             Vector2 newBlockPos = (Vector2)block.transform.position + direction;
@@ -42,33 +44,38 @@ public class BlocksMover : MonoBehaviour
                     {
                         if (nextBlock.NumberNode.Value == currBlock.NumberNode.Value)
                         {
-                            Debug.Log("merging logic ");
-                           
+                            // Debug.Log("merging logic ");
+                            movePos = currBlock.transform.position;
+                            // Debug.Log("move pos of merging " + movePos);
                             currBlock.NumberNode.Release();
+                            helper.SetNumberNode(currBlock.transform.position, null);
+                            helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
                             hasMerged = true;
                             // check if we win and increase score
                             OnBlockMerged?.Invoke(nextBlock.NumberNode.Value * 2);
-                            helper.SetNumberNode(currBlock.transform.position, null);
-                            helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
-
                             break;
                         }
                         else if (nextBlock.NumberNode.Value != currBlock.NumberNode.Value)
                         {
-                            Debug.Log("Can't move forward");
+                            //Debug.Log("Can't move forward");
+                            movePos = currBlock.transform.position;
                             break;
                         }
                     }
                     //currBlock.NumberNode.transform.DOMove(nextBlock.transform.position, 0.1f);
-                    currBlock.NumberNode.transform.position = nextBlock.transform.position;
+                    //currBlock.NumberNode.transform.position = nextBlock.transform.position;
                     helper.SetNumberNode(nextBlock.transform.position, currBlock.NumberNode);
                     helper.SetNumberNode((Vector2)nextBlock.transform.position - direction, null);
                     currBlock = nextBlock;
                     newBlockPos += direction;
+                    movePos = nextBlock.transform.position;
                 }
 
             }
             while (nextBlock != null);
+            //Debug.Log("Move Pos out of while" + movePos);
+            if(currBlock.NumberNode != null)
+                currBlock.NumberNode.transform.DOMove(movePos, 0.1f);
         }
 
         if (hasMerged)

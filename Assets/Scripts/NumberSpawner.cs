@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
@@ -11,6 +12,7 @@ public class NumberSpawner : MonoBehaviour
     [SerializeField] int numberToSpawn = 2;
     [SerializeField] NumberNode numberNode;
     Helper helper;
+    
     NumbersPool numbersPool;
     [Inject]
     private void Construct(Helper _helper, NumbersPool _numbersPool)
@@ -39,12 +41,17 @@ public class NumberSpawner : MonoBehaviour
     }
 
    
-
+    // [SerializeField] Transform[] tests;
     // private void Update() {
-    //     if(Input.GetKeyDown(KeyCode.B))
-    //     {
-    //         SpawnNumbers();
-    //     }
+    //     // if(Input.GetKeyDown(KeyCode.B))
+    //     // {
+    //     //     //SpawnNumbers();
+    //     //     for(int i = 0; i < tests.Length; i++)
+    //     //     {
+    //     //         tests[i].DOMove(new Vector2(6, 0), 0.06f).OnComplete(() => Debug.Log("Completed!" + i));
+    //     //     }
+           
+    //     // }
     // }
 }
 
