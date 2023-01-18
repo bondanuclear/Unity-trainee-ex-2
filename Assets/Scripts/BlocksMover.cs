@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
@@ -57,6 +58,7 @@ public class BlocksMover : MonoBehaviour
                             break;
                         }
                     }
+                    //currBlock.NumberNode.transform.DOMove(nextBlock.transform.position, 0.2f);
                     currBlock.NumberNode.transform.position = nextBlock.transform.position;
                     helper.SetNumberNode(nextBlock.transform.position, currBlock.NumberNode);
                     helper.SetNumberNode((Vector2)nextBlock.transform.position - direction, null);
