@@ -11,7 +11,7 @@ public class PlayerInput
           Vector2 dir = Vector2.zero;
           if(Input.touchCount > 0)
           {
-               Debug.Log("touching the screen");
+               //Debug.Log("touching the screen");
                if(Input.GetTouch(0).phase == TouchPhase.Began)
                {
                     startPos = Input.GetTouch(0).position;
