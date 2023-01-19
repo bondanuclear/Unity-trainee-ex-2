@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Helper : MonoBehaviour
 {
-    public int HelperValue {get; set;} = 4; // test property
-    //public List<Node> gridNodes = new List<Node>();
+    //public int HelperValue {get; set;} = 4; // test property
+    
     private Dictionary<Vector2, Node> nodesDict = new Dictionary<Vector2, Node>();
     [SerializeField] Numbers[] numbersColors;
     public Numbers GetNumberByValue(int value)

@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        //blocksMergedSignal.SayHello();
+        
         ChangeState(GameState.GeneratingGrid);
     }
 
@@ -115,8 +115,9 @@ public class GameManager : MonoBehaviour
         //moveDir = playerInput.GetPlayerInput();
         //Debug.Log("Blocks should move in direction " + playerInput.GetMobileInput());
         //Debug.Log("move dir " + playerInput.BlocksDirection(playerInput.GetMobileInput()));
-        moveDir = playerInput.BlocksDirection(playerInput.GetMobileInput());
         //Debug.Log($"Input found! You want to move {moveDir}");
+
+        moveDir = playerInput.BlocksDirection(playerInput.GetMobileInput());
         // if player performed input
         if(moveDir != Vector2.zero)
             ChangeState(GameState.Moving);
