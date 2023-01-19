@@ -12,8 +12,9 @@ public class GameManager : MonoBehaviour
     {
         GeneratingGrid, SpawnNumbers, PlayerInput, Moving, Lose, Win
     }
+
+    private const int WINNING_NUMBER = 2048;
     Vector2 moveDir = Vector2.zero;
-   
     GridGenerator gridGenerator;
     NumberSpawner numberSpawner;
     PlayerInput playerInput;
@@ -46,7 +47,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ChangeState(GameState.GeneratingGrid);
-       
     }
 
     private void ChangeState(GameState newState)
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
     }
     private void ProcessWinState(int value)
     {
-        if(value == 2048)
+        if(value == WINNING_NUMBER)
             ChangeState(GameState.Win);
        
     }
@@ -110,10 +110,7 @@ public class GameManager : MonoBehaviour
         if(gameState != GameState.PlayerInput) return;
         //Debug.Log($"Waiting for input! Move input is {moveDir}");
         //moveDir = playerInput.GetPlayerInput();
-
-        //
         //Debug.Log("Blocks should move in direction " + playerInput.GetMobileInput());
-
         //Debug.Log("move dir " + playerInput.BlocksDirection(playerInput.GetMobileInput()));
         moveDir = playerInput.BlocksDirection(playerInput.GetMobileInput());
         //Debug.Log($"Input found! You want to move {moveDir}");

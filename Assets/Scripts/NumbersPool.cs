@@ -12,23 +12,22 @@ public class NumbersPool : MonoBehaviour
     private Stack<NumberNode> numberStack;
     //public List<NumberNode> testList = new List<NumberNode>();
     private void Awake() {
-        SetUp();
-        
+        SetUp();    
     }
    
 
     private void SetUp()
     {
         numberStack = new Stack<NumberNode>();
-        NumberNode num = null;
+        NumberNode instance = null;
         for(int i = 0; i < poolSize; i++)
         {
             
             //testList.Add(number);
-            num = Instantiate(number, this.transform);
-            num.numbersPool = this;
-            num.gameObject.SetActive(false);
-            numberStack.Push(num);
+            instance = Instantiate(number, this.transform);
+            instance.SetPool(this);
+            instance.gameObject.SetActive(false);
+            numberStack.Push(instance);
         }
     }
     public NumberNode GetFromPool()
@@ -36,9 +35,9 @@ public class NumbersPool : MonoBehaviour
         // if out of numbers
         if(numberStack.Count <= 0)
         {
-            var num = Instantiate(number, this.transform);
-            num.numbersPool = this;
-            return num;
+            var instance = Instantiate(number, this.transform);
+            instance.SetPool(this);
+            return instance;
         }
         NumberNode pooledObject = numberStack.Pop();
         pooledObject.gameObject.SetActive(true);
@@ -58,10 +57,5 @@ public class NumbersPool : MonoBehaviour
         numberStack.Push(numberNode);
         numberNode.gameObject.SetActive(false);
     }
-    private void Update() {
-        // if (Input.GetKeyDown(KeyCode.B))
-        // {
-        //     GetFromPool();
-        // }
-    }
+    
 }

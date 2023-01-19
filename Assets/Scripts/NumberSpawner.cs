@@ -10,7 +10,6 @@ public class NumberSpawner : MonoBehaviour
 {
     static System.Random rnd = new System.Random();
     [SerializeField] int numberToSpawn = 2;
-    [SerializeField] NumberNode numberNode;
     Helper helper;
     
     NumbersPool numbersPool;
@@ -40,18 +39,6 @@ public class NumberSpawner : MonoBehaviour
         
     }
 
-   
-    // [SerializeField] Transform[] tests;
-    // private void Update() {
-    //     // if(Input.GetKeyDown(KeyCode.B))
-    //     // {
-    //     //     //SpawnNumbers();
-    //     //     for(int i = 0; i < tests.Length; i++)
-    //     //     {
-    //     //         tests[i].DOMove(new Vector2(6, 0), 0.06f).OnComplete(() => Debug.Log("Completed!" + i));
-    //     //     }
-           
-    //     // }
-    // }
+
 }
 

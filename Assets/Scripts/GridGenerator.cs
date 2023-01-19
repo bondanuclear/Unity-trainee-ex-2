@@ -24,12 +24,10 @@ public class GridGenerator : MonoBehaviour
             {
                 Node instantiatedNode = Instantiate(nodePrefab, new Vector2(i - 1, j - 1), Quaternion.identity, transform);
                 helper.FillDictionary(instantiatedNode.transform.position, instantiatedNode);        
-                //helper.nodesDict[instantiatedNode.transform.position] = instantiatedNode;
+                
             }
         }
-        
         GameObject instantiatedBackground = Instantiate(background.gameObject, new Vector2(0, 0), Quaternion.identity);
-        //Debug.Log($"Helper is here, check value = {helper.HelperValue} and {helper.nodesDict.Count}");
     }
     
 }

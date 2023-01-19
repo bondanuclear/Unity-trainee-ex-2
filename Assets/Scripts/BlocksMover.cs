@@ -62,8 +62,6 @@ public class BlocksMover : MonoBehaviour
                             break;
                         }
                     }
-                    //currBlock.NumberNode.transform.DOMove(nextBlock.transform.position, 0.1f);
-                    //currBlock.NumberNode.transform.position = nextBlock.transform.position;
                     helper.SetNumberNode(nextBlock.transform.position, currBlock.NumberNode);
                     helper.SetNumberNode((Vector2)nextBlock.transform.position - direction, null);
                     currBlock = nextBlock;
@@ -77,7 +75,7 @@ public class BlocksMover : MonoBehaviour
             if(currBlock.NumberNode != null)
                 currBlock.NumberNode.transform.DOMove(movePos, 0.1f);
         }
-
+        // if we merge - we spawn numbers only ONCE
         if (hasMerged)
         {
             OnHasMergedTrue?.Invoke();
@@ -99,6 +97,9 @@ public class BlocksMover : MonoBehaviour
     private void CheckLoseState(List<Node> filledNodes)
     {
         var freeBlocks = helper.NodesDictValues().Where(b => b.NumberNode == null).ToList();
+        // if we have no space
+        // check whether we can move
+        // if can't - we lose
         if (freeBlocks.Count == 0)
         {
             if (WillLoseState(filledNodes))
