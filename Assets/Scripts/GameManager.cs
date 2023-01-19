@@ -19,12 +19,14 @@ public class GameManager : MonoBehaviour
     NumberSpawner numberSpawner;
     PlayerInput playerInput;
     BlocksMover blocksMover;
+    //BlocksMergedSignal blocksMergedSignal;
     GameState gameState;
 
     [Inject]
     private void Construct(GridGenerator _gridGenerator,
      NumberSpawner _numberSpawner, PlayerInput _playerInput, BlocksMover _blocksMover)
     {   
+        //blocksMergedSignal = _blocksMergedSignal;
         gridGenerator = _gridGenerator;
         numberSpawner = _numberSpawner;
         playerInput = _playerInput;
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        //blocksMergedSignal.SayHello();
         ChangeState(GameState.GeneratingGrid);
     }
 

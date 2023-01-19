@@ -6,7 +6,7 @@ using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
-public class NumberSpawner : MonoBehaviour
+public class NumberSpawner 
 {
     static System.Random rnd = new System.Random();
     [SerializeField] int numberToSpawn = 2;
@@ -14,7 +14,7 @@ public class NumberSpawner : MonoBehaviour
     
     NumbersPool numbersPool;
     [Inject]
-    private void Construct(Helper _helper, NumbersPool _numbersPool)
+    public NumberSpawner(Helper _helper, NumbersPool _numbersPool)
     {
         helper = _helper;
         numbersPool = _numbersPool;

@@ -6,7 +6,7 @@ using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
-public class BlocksMover : MonoBehaviour
+public class BlocksMover
 {
    
     public event Action<int> OnBlockMerged;
@@ -15,8 +15,9 @@ public class BlocksMover : MonoBehaviour
     Vector2[] directions = { Vector2.left, Vector2.up, Vector2.right, Vector2.down};
     NumbersPool numbersPool;
     Helper helper;
+
     [Inject]
-    private void Construct(Helper _helper, NumbersPool _numbersPool)
+    public BlocksMover(Helper _helper, NumbersPool _numbersPool)
     {
         helper = _helper;
         numbersPool = _numbersPool;
@@ -46,7 +47,6 @@ public class BlocksMover : MonoBehaviour
                         {
                             // Debug.Log("merging logic ");
                             movePos = currBlock.transform.position;
-                            // Debug.Log("move pos of merging " + movePos);
                             currBlock.NumberNode.Release();
                             helper.SetNumberNode(currBlock.transform.position, null);
                             helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
