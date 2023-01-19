@@ -26,7 +26,7 @@ public class WinState : MonoBehaviour
     }
     public void CheckWinState(int value)
     {
-        // Debug.Log($"VALUE BLOCK MOVER PASS IS {value}");
+        Debug.Log($"VALUE BLOCK MOVER PASS IS {value}");
         if(value == WIN_NUMBER)
         {
             winPanel.SetActive(!winPanel.activeSelf);

@@ -52,7 +52,7 @@ public class BlocksMover
                             helper.GetAndInitNumberNode(nextBlock.transform.position, nextBlock.NumberNode.Value * 2);
                             hasMerged = true;
                             // check if we win and increase score
-                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value * 2);
+                            OnBlockMerged?.Invoke(nextBlock.NumberNode.Value);
                             break;
                         }
                         else if (nextBlock.NumberNode.Value != currBlock.NumberNode.Value)
